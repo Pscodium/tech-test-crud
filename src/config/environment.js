@@ -1,4 +1,4 @@
-// You need to install node version using the .nvmrc cause in this node version you don't need to use dotenv lib
+/* eslint-disable no-undef */
 
 const environment = {
     server: {
@@ -12,6 +12,6 @@ const environment = {
         password: process.env.DB_PASSWORD,
         dialect: 'mysql'
     }
-}
+};
 
 export { environment };

@@ -1,0 +1,16 @@
+DROP TABLE IF EXISTS customer_contacts;
+DROP TABLE IF EXISTS customer;
+
+CREATE TABLE customer (
+  id VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
+  cpf VARCHAR(11) NOT NULL UNIQUE,
+  name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE customer_contacts (
+  id VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
+  customer_id VARCHAR(36) NOT NULL,
+  type ENUM('PHONE', 'EMAIL') NOT NULL,
+  value VARCHAR(100) NOT NULL,
+  FOREIGN KEY (customer_id) REFERENCES customer(id) ON DELETE CASCADE
+);

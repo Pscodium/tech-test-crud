@@ -13,7 +13,7 @@ export default function logMiddleware (req, res, next) {
     const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
 
     res.on('finish', () => {
-        const requestedAt = moment().utcOffset(-3).format('DD-MM-YYYY HH:mm:ss')
+        const requestedAt = moment().utcOffset(-3).format('DD-MM-YYYY HH:mm:ss');
         const elapsedTime = new Date().getTime() - startTime.getTime();
         const { statusCode } = res;
 
