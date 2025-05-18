@@ -34,6 +34,20 @@
   - Node Version Manager (windows): https://github.com/coreybutler/nvm-windows
   - (Windows):
     ```cmd
-    nvm install v22.15.0 && nvm use 22.15.0
+    nvm install v22.15.0 && ./win-node.bat
     ```
-  
+#### Arquivo `win-node.bat`
+
+- Este arquivo foi criado para facilitar a alteração de versões do node através do nvm
+```cmd
+@echo off
+for /f "delims=" %%v in (.nvmrc) do (
+    nvm use %%v
+)
+```
+
+- **@echo off:** desliga a exibição dos comandos executados
+- **for /f:** lê o conteúdo do arquivo
+- **"delims=":** pega o conteúdo da linha completa e não dívide em 2 ou mais em caso de tabulação ou espaço
+- **%%v in (.nvmrc):** isola o conteúdo do arquivo `.nvmrc`dentro da variável `%%v`
+- **do ( nvm use %%v )**: vai fazer a execução do comando combinando `nvm use` com o conteúdo(versão do node) dentro da .nvmrc 
