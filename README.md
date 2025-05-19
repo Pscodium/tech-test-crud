@@ -9,21 +9,37 @@
 - [x] Criar a API para Realizar o CRUD seguindo o padrão REST;
 - [x] Listagem com possibilidade de filtrar por DDD dos Celulares, trazendo todos os clientes que possuem celulares com aquele DDD;
 - [x] Listagem com possibilidade de filtrar por uma parte do nome;
-- [ ] Disponibilizar collection do Postman ou Swagger para a API;
-- [ ] Criar Dockerfile do projeto.
+- [x] Disponibilizar collection do Postman ou Swagger para a API;
+- [x] Criar Dockerfile do projeto.
 - [x] Subir código em um repositório git
 - [x] Subir container do banco de dados usando docker compose
 
 ## Instalação e Inicialização
 
-### Instalação:
-- Executar `npm install` para instalar todas as dependências do projeto
+### Método 1: Usando Docker (Recomendado)
+- Executar o comando `docker-compose up -d`
+- Acessar a API em `http://localhost:3000/api`
+- Acessar a documentação Swagger em `http://localhost:3000/api-docs`
 
-### Inicialização:
+### Método 2: Instalação Manual
+- Executar `npm install` para instalar todas as dependências do projeto
 - Criar o arquivo `.env` na raíz do projeto e copiar o conteúdo de dentro do arquivo `.env.example`
-- Executar o comando `docker compose up -d`(windows) ou `docker-compose up -d`(linux)
+- Executar o comando `docker-compose up -d` para subir apenas o banco de dados
 - Executar o comando `npm run migrate` para migrar as tabelas de dados
-- Executar `npm run dev` para inicializar a aplicação
+- Executar `npm run dev` para inicializar a aplicação em modo de desenvolvimento
+- Executar `npm start` para inicializar a aplicação em modo de produção
+
+## Rotas da API
+
+### Clientes
+- **POST** `/api/customers/create` - Criar um novo cliente
+- **GET** `/api/customers` - Listar todos os clientes
+  - Parâmetros de consulta:
+    - `ddd` - Filtrar por DDD do telefone
+    - `name` - Filtrar por parte do nome
+- **GET** `/api/customers/get/:id` - Buscar um cliente por ID
+- **PUT** `/api/customers/update/:id` - Atualizar um cliente
+- **DELETE** `/api/customers/delete/:id` - Excluir um cliente
 
 #### Soluções de possíveis erros (Pré-requisito Opcional)
 - Para a instalação da versão correta do node utilizada para a criação desse projeto você deverá seguir estes passos:
