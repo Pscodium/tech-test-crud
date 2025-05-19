@@ -1,6 +1,28 @@
 version: "3"
 
 services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    ports:
+      - ${SERVER_PORT}:${SERVER_PORT}
+    depends_on:
+      - db
+    volumes:
+      - ./:/usr/src/app
+      - /usr/src/app/node_modules
+    command: >
+      sh -c "
+        echo 'Waiting for database to be ready...' &&
+        sleep 10 &&
+        npm run migrate &&
+        npm run dev
+      "
+    restart: unless-stopped
+
   db:
     env_file:
       - .env

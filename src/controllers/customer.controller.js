@@ -14,7 +14,10 @@ export const create = async (req, res, next) => {
 
         const customer = await customerRepository.create({ cpf: formattedCpf, name, contacts });
 
-        res.status(201).json(customer);
+        res.status(201).json({
+            status: 'success',
+            data: customer
+        });
     } catch (err) {
         next(err);
     }
@@ -41,7 +44,11 @@ export const findAll = async (req, res, next) => {
             customers = await customerRepository.findAll();
         }
 
-        res.status(200).json(customers);
+        res.status(200).json({
+            status: 'success',
+            results: customers.length,
+            data: customers
+        });
     } catch (err) {
         next(err);
     }
@@ -59,7 +66,10 @@ export const findOne = async (req, res, next) => {
 
         const customer = await customerRepository.findOne(id);
 
-        res.status(200).json(customer);
+        res.status(200).json({
+            status: 'success',
+            data: customer
+        });
     } catch (err) {
         next(err);
     }
@@ -79,7 +89,10 @@ export const update = async (req, res, next) => {
 
         const customer = await customerRepository.update(id, { name, contacts });
 
-        res.status(200).json(customer);
+        res.status(200).json({
+            status: 'success',
+            data: customer
+        });
     } catch (err) {
         next(err);
     }
@@ -95,10 +108,12 @@ export const update = async (req, res, next) => {
 export const deleteById = async (req, res, next) => {
     try {
         const { id } = req.params;
-
         await customerRepository.deleteById(id);
 
-        res.sendStatus(204);
+        res.status(204).json({
+            status: 'success',
+            data: null
+        });
     } catch (err) {
         next(err);
     }
