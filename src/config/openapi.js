@@ -32,15 +32,15 @@ export default {
                             },
                             example: {
                                 cpf: '12345678901',
-                                name: 'John Doe',
+                                name: 'teste',
                                 contacts: [
                                     {
                                         type: 'PHONE',
-                                        value: '48912345678'
+                                        value: '47912345678'
                                     },
                                     {
                                         type: 'EMAIL',
-                                        value: 'john@example.com'
+                                        value: 'test@example.com'
                                     }
                                 ]
                             }
@@ -248,15 +248,15 @@ export default {
                                 $ref: '#/components/schemas/CustomerUpdateInput'
                             },
                             example: {
-                                name: 'John Smith',
+                                name: 'teste',
                                 contacts: [
                                     {
                                         type: 'PHONE',
-                                        value: '48987654321'
+                                        value: '49987654321'
                                     },
                                     {
                                         type: 'EMAIL',
-                                        value: 'john.smith@example.com'
+                                        value: 'test.updated@example.com'
                                     }
                                 ]
                             }
@@ -375,7 +375,7 @@ export default {
                     name: {
                         type: 'string',
                         description: 'Customer name',
-                        example: 'John Doe'
+                        example: 'Teste Atualizado'
                     },
                     contacts: {
                         type: 'array',
@@ -392,7 +392,7 @@ export default {
                     name: {
                         type: 'string',
                         description: 'Customer name',
-                        example: 'John Smith'
+                        example: 'Teste da Silva'
                     },
                     contacts: {
                         type: 'array',
@@ -420,7 +420,7 @@ export default {
                     name: {
                         type: 'string',
                         description: 'Customer name',
-                        example: 'John Doe'
+                        example: 'Teste da Silva'
                     },
                     contacts: {
                         type: 'array',
@@ -444,7 +444,7 @@ export default {
                     value: {
                         type: 'string',
                         description: 'Contact value',
-                        example: '48912345678'
+                        example: '47912345678'
                     }
                 }
             },
