@@ -7,17 +7,19 @@
   "scripts": {
     "dev": "nodemon --env-file=.env --watch src --ext js --exec node src/server.js",
     "migrate": "node --env-file=.env src/database/migration/index.js",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "start": "node --env-file=.env src/server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "chalk": "^3.0.0",
-    "express": "^5.1.0",
+    "express": "^4.18.2",
     "moment": "^2.30.1",
     "mysql2": "^3.14.1",
     "nodemon": "^3.1.10",
+    "swagger-ui-express": "^5.0.0",
     "uuid": "^11.1.0"
   },
   "devDependencies": {

@@ -1,21 +1,65 @@
 import { db } from '../database/index.js';
 import { v4 as uuidv4 } from 'uuid';
+import { ConflictError, NotFoundError } from '../utils/errors.js';
+
 
 /**
- * Creates a new customer in the database.
- *
- * @param {Object} data - The data for the new customer.
- * @param {string} data.cpf - The CPF of the customer.
- * @param {string} data.name - The name of the customer.
- * @throws Will throw an error if the database transaction fails.
+ * 
+ * @param {string} customerId
+ * @param {object} connection
+ * @returns {Promise<boolean>}
  */
+export const customerExists = async (customerId, connection) => {
+    const pool = connection || await db.getConnection();
+    try {
+        const [rows] = await pool.execute(
+            'SELECT 1 FROM customer WHERE id = ? LIMIT 1',
+            [customerId]
+        );
+        return rows.length > 0;
+    } finally {
+        if (!connection) pool.release();
+    }
+};
 
+/**
+ * 
+ * @param {string} cpf
+ * @param {object} connection
+ * @returns {Promise<boolean>}
+ */
+export const cpfExists = async (cpf, connection) => {
+    const pool = connection || await db.getConnection();
+    try {
+        const [rows] = await pool.execute(
+            'SELECT 1 FROM customer WHERE cpf = ? LIMIT 1',
+            [cpf]
+        );
+        return rows.length > 0;
+    } finally {
+        if (!connection) pool.release();
+    }
+};
+
+/**
+ *
+ * @param {Object} data
+ * @param {string} data.cpf
+ * @param {string} data.name
+ * @throws {ConflictError}
+ * @returns {Promise<Object>}
+ */
 export const create = async (data) => {
     const pool = await db.getConnection();
     try {
         await pool.beginTransaction();
+        
+        const cpfAlreadyExists = await cpfExists(data.cpf, pool);
+        if (cpfAlreadyExists) {
+            throw new ConflictError(`Customer with CPF ${data.cpf} already exists`);
+        }
         const customerId = uuidv4();
-
+        
         await pool.query(
             'INSERT INTO customer (id, cpf, name) VALUES (?, ?, ?)',
             [customerId, data.cpf, data.name]
@@ -31,7 +75,6 @@ export const create = async (data) => {
         }
 
         const result = await findOne(customerId, pool);
-
         await pool.commit();
         return result;
     } catch (err) {
@@ -47,6 +90,11 @@ export const update = async (customerId, data) => {
     try {
         await pool.beginTransaction();
         
+        const exists = await customerExists(customerId, pool);
+        if (!exists) {
+            throw new NotFoundError('Customer', customerId);
+        }
+
         if (data.name) {
             await pool.execute(
                 'UPDATE customer SET name = ? WHERE id = ?',
@@ -83,6 +131,11 @@ export const deleteById = async (customerId) => {
     const pool = await db.getConnection();
     try {
         await pool.beginTransaction();
+        const exists = await customerExists(customerId, pool);
+        if (!exists) {
+            throw new NotFoundError('Customer', customerId);
+        }
+
         await pool.execute('DELETE FROM customer_contacts WHERE customer_id = ?', [customerId]);
         await pool.execute('DELETE FROM customer WHERE id = ?', [customerId]);
         await pool.commit();
@@ -261,11 +314,9 @@ export const findAllByName = async (name) => {
     }
 };
 
-export const findOne = async (customerId, pool) => {
-    if (!pool) {
-        pool = await db.getConnection();
-        await pool.beginTransaction();
-    }
+export const findOne = async (customerId, connection) => {
+    const pool = connection || await db.getConnection();
+    let needToRelease = !connection;
     try {
         const [customer] = await pool.execute(
             `
@@ -294,14 +345,17 @@ export const findOne = async (customerId, pool) => {
             LIMIT 1`,
             [customerId]
         );
-        const result = customer[0];
+
+        if (customer.length === 0) {
+            throw new NotFoundError('Customer', customerId);
+        }
 
         await pool.commit();
-        return result;
+        return customer[0];
     } catch (err) {
         await pool.rollback();
         throw err;
     } finally {
-        pool.release();
+        if (needToRelease) pool.release();
     }
 };
